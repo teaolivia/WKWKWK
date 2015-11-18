@@ -21,6 +21,7 @@ import java.util.Map;
 public class ParseData {
      String name[] ;
      String data[][] ;
+     ArrayList<String> variasiClass=new ArrayList<String>() ; //List yang menyimpan nilai berbeda untuk klasifikasi
      int variasihasil; //  nilai yang menyimpan nilai perbedaan hasil akhir (klasifikasi)
      int variasidata[] ; //array yang menyimpan nilai perbedaan data
      int iname ;//iname = jumlah atribut
@@ -119,13 +120,12 @@ public class ParseData {
          
      }
      
-     public void hitungVariasiHasil() {
-         ArrayList<String> item = new ArrayList<String>();
+     public void hitungVariasiHasil() {         
          for (int i=0;i<rdata;i++) {
              String temp = data[i][iname-1];
-             if (!item.contains(temp)) item.add(temp);
+             if (!variasiClass.contains(temp)) variasiClass.add(temp);
          }
-         variasihasil = item.size();
+         variasihasil = variasiClass.size();
      }
      
      public void hitungVariasiAtribut() {
@@ -173,7 +173,34 @@ public class ParseData {
                     bayesTable.put(key,addition);
                 }
             }
-         }
+         }     
+     }
      
+     public void getClassification(String s[],int k) {
+         //Asumsi masukan (value1,value2,....,valueN)
+         double max=0,prob_temp;
+         String kelas="";
+         for (int i=0;i<variasihasil;i++) {
+             String nullvalue ="";
+             String kelasuji = variasiClass.get(i);
+              System.out.print("P("+kelasuji+")");
+              prob_temp = classProbability.get(kelasuji);
+              for (int j=0;j<k;j++) {
+                  String aa = name[j]+"|"+s[j]+"|"+kelasuji ;
+                  double multiplier = 0;
+                  if (bayesTable.get(aa)!=null) {
+                      multiplier = bayesTable.get(aa);                      
+                  }
+                  else nullvalue=nullvalue+aa+" - " ;
+                  prob_temp = prob_temp*multiplier ;
+                  System.out.print("*P("+aa+")");
+              }
+              System.out.println(" = "+prob_temp);
+              System.out.println("Null value : "+nullvalue);
+              if (max<prob_temp) {max=prob_temp; kelas=kelasuji;}
+         }
+         String datauji="";
+         for (int i=0;i<k;i++) datauji=datauji+s[i]+",";
+         System.out.println(datauji+" => "+kelas+" (Probability : )"+max);
      }
 }

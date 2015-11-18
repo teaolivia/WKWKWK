@@ -27,6 +27,10 @@ public class AI {
         P.generateClassProbability();
         P.generateBayesTable();
         P.printInfo();
+        
+        String contoh = "vhigh,vhigh,2,4,small,low";
+        String ret[] = contoh.split(",");
+        P.getClassification(ret,ret.length);
     }
     
 }
