@@ -21,8 +21,9 @@ public class AI {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ParseData P = new ParseData("D:/data.txt") ;
-        
+        ParseData P = new ParseData("D:/data.txt") ; //NAMA FILENYA SESUAIKAN SAMA LOKASI FILENYA YA
+        P.hitungVariasiAtribut();
+        P.hitungVariasiHasil();
         P.printInfo();
     }
     

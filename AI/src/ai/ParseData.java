@@ -3,6 +3,8 @@ package ai;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,9 +19,11 @@ import java.io.FileReader;
 public class ParseData {
      String name[] ;
      String data[][] ;
-     int iname ;
-     int rdata;
-     
+     int variasihasil; //  nilai yang menyimpan nilai perbedaan hasil akhir (klasifikasi)
+     int variasidata[] ; //array yang menyimpan nilai perbedaan data
+     int iname ;//iname = jumlah atribut
+     int rdata; //rdata = jumlah data
+     Vector<String,Int> bayesTable = new Vector<String,Int> ();
      
      ParseData() {
          iname = 5;
@@ -42,6 +46,7 @@ public class ParseData {
             String[] attr = line.split(",");
             iname = attr.length; //menghitung jumlah attribut
             name = new String[iname];
+            variasidata = new int[iname];
             for (int i=0;i<iname;i++) {
                 name[i] = attr[i];
             }
@@ -83,13 +88,38 @@ public class ParseData {
      
      public void printInfo() {
          System.out.println("Jumlah atribut : "+iname);
-         for (int i=0;i<iname;i++) System.out.println("  "+(i+1)+". "+name[i]);
+         for (int i=0;i<iname;i++) System.out.println("  "+(i+1)+". "+name[i]+" | Nilai berbeda (variasi) : "+variasidata[i]);
          System.out.println("Jumlah data : "+rdata);
-         for (int i=0;i<rdata;i++) {
+         System.out.println("Variasi hasil akhir (klasifikasi) : "+variasihasil);
+         /*for (int i=0;i<rdata;i++) {
              for (int j=0;j<iname-1;j++) {
                  System.out.print(data[i][j]+",");
              }
              System.out.print(data[i][iname-1]+"\n");
+         }*/
+         
+         
+         
+     }
+     
+     public void hitungVariasiHasil() {
+         ArrayList<String> item = new ArrayList<String>();
+         for (int i=0;i<rdata;i++) {
+             String temp = data[i][iname-1];
+             if (!item.contains(temp)) item.add(temp);
+         }
+         variasihasil = item.size();
+     }
+     
+     public void hitungVariasiAtribut() {
+         
+         for (int j=0;j<iname;j++) {
+            ArrayList<String> item = new ArrayList<String>();
+            for (int i=0;i<rdata;i++) {
+                String temp = data[i][j];
+                if (!item.contains(temp)) item.add(temp);
+            }
+            variasidata[j] = item.size();
          }
      }
 }
