@@ -25,6 +25,7 @@ public class AI {
         P.hitungVariasiAtribut();
         P.hitungVariasiHasil();
         P.generateClassProbability();
+        P.generateBayesTable();
         P.printInfo();
     }
     

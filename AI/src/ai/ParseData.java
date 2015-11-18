@@ -27,6 +27,7 @@ public class ParseData {
      int rdata; //rdata = jumlah data
      Map<String,Double> bayesTable = new HashMap<String,Double> ();
      Map<String,Double> classProbability = new HashMap<String,Double> ();
+     Map<String,Integer> classFrekuensi = new HashMap<String,Integer>();
      
      ParseData() {
          iname = 5;
@@ -100,9 +101,19 @@ public class ParseData {
              }
              System.out.print(data[i][iname-1]+"\n");
          }*/
+          System.out.println("==== Frekuensi tiap Kelas ====");
+         System.out.println("Kelas -> Frekuensi");         
+         for (Map.Entry<String,Integer> entry : classFrekuensi.entrySet()) {                
+                System.out.println(" " + entry.getKey() + " -> " + entry.getValue());
+        }
          System.out.println("==== Probabilitas tiap Kelas ====");
-         System.out.println("Kelas -> Probabilitas");         
+         System.out.println("Kelas -> Probabilitas ");         
          for (Map.Entry<String, Double> entry : classProbability.entrySet()) {
+                System.out.println(" " + entry.getKey() + " -> " + entry.getValue());
+        }
+         System.out.println("=== Probability Table");
+         System.out.println("Nama Atribut | Nilai Atribut | Klasifikasi -> Probability");
+           for (Map.Entry<String, Double> entry : bayesTable.entrySet()) {
                 System.out.println(" " + entry.getKey() + " -> " + entry.getValue());
         }
          
@@ -136,23 +147,33 @@ public class ParseData {
                  double current = (double) classProbability.get(key);
                  current+=(double)1/rdata ;
                  classProbability.put(key,current);
+                 int current2 = classFrekuensi.get(key);
+                 classFrekuensi.put(key,current2+1);
              }
-             else classProbability.put(key,(double)1/rdata);
+             else {
+                 classProbability.put(key,(double)1/rdata);
+                 classFrekuensi.put(key,1);
+             }
          }
      }
-     /*
-     public void generateBayesTable() {
-         //Tes untuk atribut satu dulu
+     
+     public void generateBayesTable() {        
          for (int j=0;j<iname;j++) {
             for (int i=0;i<rdata;i++) {
                 String key = name[j]+"|"+data[i][j]+"|"+data[i][iname-1];
                 if (bayesTable.containsKey(key)) {
-                    int current = bayesTable.get(key);
-                    bayesTable.put(key,current+1);
+                    double current = bayesTable.get(key);
+                    int frekuensiKelas = classFrekuensi.get(data[i][iname-1]);                    
+                    double addition =(double) 1/frekuensiKelas ;
+                    bayesTable.put(key,(double) current+addition);
                 }
-                else bayesTable.put(key,1);
+                else {
+                    int frekuensiKelas = classFrekuensi.get(data[i][iname-1]);                    
+                    double addition =(double) 1/frekuensiKelas ;
+                    bayesTable.put(key,addition);
+                }
             }
          }
      
-     }*/
+     }
 }
