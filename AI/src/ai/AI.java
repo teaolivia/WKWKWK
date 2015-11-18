@@ -24,6 +24,7 @@ public class AI {
         ParseData P = new ParseData("D:/data.txt") ; //NAMA FILENYA SESUAIKAN SAMA LOKASI FILENYA YA
         P.hitungVariasiAtribut();
         P.hitungVariasiHasil();
+        P.generateClassProbability();
         P.printInfo();
     }
     

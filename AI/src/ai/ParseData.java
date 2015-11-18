@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,7 +25,8 @@ public class ParseData {
      int variasidata[] ; //array yang menyimpan nilai perbedaan data
      int iname ;//iname = jumlah atribut
      int rdata; //rdata = jumlah data
-     Vector<String,Int> bayesTable = new Vector<String,Int> ();
+     Map<String,Double> bayesTable = new HashMap<String,Double> ();
+     Map<String,Double> classProbability = new HashMap<String,Double> ();
      
      ParseData() {
          iname = 5;
@@ -97,8 +100,11 @@ public class ParseData {
              }
              System.out.print(data[i][iname-1]+"\n");
          }*/
-         
-         
+         System.out.println("==== Probabilitas tiap Kelas ====");
+         System.out.println("Kelas -> Probabilitas");         
+         for (Map.Entry<String, Double> entry : classProbability.entrySet()) {
+                System.out.println(" " + entry.getKey() + " -> " + entry.getValue());
+        }
          
      }
      
@@ -122,4 +128,31 @@ public class ParseData {
             variasidata[j] = item.size();
          }
      }
+     
+     public void generateClassProbability() {
+         for (int i=0;i<rdata;i++) {
+             String key = data[i][iname-1];
+             if (classProbability.containsKey(key)) {
+                 double current = (double) classProbability.get(key);
+                 current+=(double)1/rdata ;
+                 classProbability.put(key,current);
+             }
+             else classProbability.put(key,(double)1/rdata);
+         }
+     }
+     /*
+     public void generateBayesTable() {
+         //Tes untuk atribut satu dulu
+         for (int j=0;j<iname;j++) {
+            for (int i=0;i<rdata;i++) {
+                String key = name[j]+"|"+data[i][j]+"|"+data[i][iname-1];
+                if (bayesTable.containsKey(key)) {
+                    int current = bayesTable.get(key);
+                    bayesTable.put(key,current+1);
+                }
+                else bayesTable.put(key,1);
+            }
+         }
+     
+     }*/
 }
