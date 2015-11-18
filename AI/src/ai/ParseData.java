@@ -26,6 +26,8 @@ public class ParseData {
      int variasidata[] ; //array yang menyimpan nilai perbedaan data
      int iname ;//iname = jumlah atribut
      int rdata; //rdata = jumlah data
+     int totalMatch ;
+     double accuracy ;
      Map<String,Double> bayesTable = new HashMap<String,Double> ();
      Map<String,Double> classProbability = new HashMap<String,Double> ();
      Map<String,Integer> classFrekuensi = new HashMap<String,Integer>();
@@ -92,6 +94,8 @@ public class ParseData {
      }
      
      public void printInfo() {
+         System.out.println("===================================");
+         System.out.println("======== DATA DATA TERKAIT ========");
          System.out.println("Jumlah atribut : "+iname);
          for (int i=0;i<iname;i++) System.out.println("  "+(i+1)+". "+name[i]+" | Nilai berbeda (variasi) : "+variasidata[i]);
          System.out.println("Jumlah data : "+rdata);
@@ -112,12 +116,12 @@ public class ParseData {
          for (Map.Entry<String, Double> entry : classProbability.entrySet()) {
                 System.out.println(" " + entry.getKey() + " -> " + entry.getValue());
         }
-         System.out.println("=== Probability Table");
+       /*  System.out.println("=== Probability Table");
          System.out.println("Nama Atribut | Nilai Atribut | Klasifikasi -> Probability");
            for (Map.Entry<String, Double> entry : bayesTable.entrySet()) {
                 System.out.println(" " + entry.getKey() + " -> " + entry.getValue());
-        }
-         
+        }*/
+        System.out.println("===================================\n"); 
      }
      
      public void hitungVariasiHasil() {         
@@ -176,14 +180,15 @@ public class ParseData {
          }     
      }
      
-     public void getClassification(String s[],int k) {
+     public String getClassification(String s[],int k) {
          //Asumsi masukan (value1,value2,....,valueN)
+         
          double max=0,prob_temp;
          String kelas="";
          for (int i=0;i<variasihasil;i++) {
              String nullvalue ="";
              String kelasuji = variasiClass.get(i);
-              System.out.print("P("+kelasuji+")");
+              //System.out.print("P("+kelasuji+")");
               prob_temp = classProbability.get(kelasuji);
               for (int j=0;j<k;j++) {
                   String aa = name[j]+"|"+s[j]+"|"+kelasuji ;
@@ -193,14 +198,34 @@ public class ParseData {
                   }
                   else nullvalue=nullvalue+aa+" - " ;
                   prob_temp = prob_temp*multiplier ;
-                  System.out.print("*P("+aa+")");
+                  //System.out.print("*P("+aa+")");
               }
-              System.out.println(" = "+prob_temp);
-              System.out.println("Null value : "+nullvalue);
+              //System.out.println(" = "+prob_temp);
+              //System.out.println("Null value : "+nullvalue);
               if (max<prob_temp) {max=prob_temp; kelas=kelasuji;}
          }
          String datauji="";
          for (int i=0;i<k;i++) datauji=datauji+s[i]+",";
-         System.out.println(datauji+" => "+kelas+" (Probability : )"+max);
+         System.out.println(datauji+" => "+kelas+" |Probability : "+max);
+         return kelas;
+     }
+     
+     public void doFullTraining() {
+         System.out.println("=============== FULL TRAINING CLASSIFICATION DATA ===============");
+         for (int i=0;i<rdata;i++) {
+             String datauji[] = data[i] ;
+             String hasil =getClassification(datauji,iname-1);
+             System.out.print("Class from data : "+data[i][iname-1]);
+             if (hasil.equals(data[i][iname-1])) {
+                 totalMatch++;
+                 System.out.println(" ===> MATCH !!");
+             }
+             else System.out.println(" ===> NOT MATCH !!");
+         }
+         System.out.println("=> Jumlah data yang match : "+totalMatch);
+         System.out.println("=> Jumlah yang data tidak match : "+(rdata-totalMatch));
+         accuracy = ((double) totalMatch/rdata)*100 ;
+         System.out.println("=> Akurasi : "+accuracy);
+         System.out.println("=====================================================================");
      }
 }
