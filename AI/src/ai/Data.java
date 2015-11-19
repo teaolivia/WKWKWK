@@ -29,6 +29,8 @@ public class Data {
     int[] totalDataperSet ; 
     int numAttr ;//numAttr = jumlah atribut
     int totalData; //totalData = jumlah data
+    int numDataSetNormal ;
+    int numDataSetOver ;
     String dataName;
      ArrayList<String> listAttr =new ArrayList<String>();
      
@@ -97,6 +99,8 @@ public class Data {
          int perData = totalData/10 ;
          System.out.println(perData);
          totalDataperSet[10] = perData + (totalData % 10);
+         this.numDataSetNormal = perData ;
+         this.numDataSetOver = perData + (totalData % 10);
          dataSet1 = new String[perData][numAttr];
          dataSet2 = new String[perData][numAttr];
          dataSet3 = new String[perData][numAttr];
@@ -187,5 +191,45 @@ public class Data {
              for (int j=0;j<numAttr;j++) System.out.print("|"+dataSet10[i][j]);
             System.out.println();
          }
+     }
+     
+     public String[][] generateDataTraining(int i) {
+         String ret[][]=new String[5][5];
+         
+         if (i==10) ret = new String[numDataSetNormal*9][numAttr] ;
+         else ret = new String[(numDataSetNormal*8)+numDataSetOver][numAttr];
+         
+         if (i==10) {
+             int start = 0;
+             int end = numDataSetNormal*8 ;
+             int j=0;
+             for (int k=start;k<end;k++) {
+                 ret[j] = data[k];
+                 j++;
+             }
+         }
+         else if (i==1) {
+             int start = numDataSetNormal ;
+             int end = totalData ;
+             int j=0;
+             for (int k=start;k<end;k++) {
+                 ret[j] = data[k];
+                 j++;
+             }
+         }
+         else {
+             int start1= 0,start2 = (numDataSetNormal*i) ;
+             int end1=(numDataSetNormal*(i-1)),end2=totalData ;
+             int j=0;
+             for (int k=start1;k<end1;k++) {
+                 ret[j] = data[k];
+                 j++;
+             }
+             for (int k=start2;k<end2;k++) {
+                 ret[j]=data[k];
+                 j++;
+             }
+         }         
+         return ret ;
      }
 }

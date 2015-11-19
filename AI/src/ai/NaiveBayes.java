@@ -192,7 +192,7 @@ public class NaiveBayes {
      }
      
      
-     public void doClassification(String[][] dataTraining,int totalDTrain,String[][] dataUji,int totalDUji) {
+     public double doClassification(String[][] dataTraining,int totalDTrain,String[][] dataUji,int totalDUji) {
          this.data = dataTraining ;
          this.totalData = totalDTrain ;
          this.dataTest = dataUji;
@@ -205,7 +205,13 @@ public class NaiveBayes {
          hitungVariasiHasil();
          generateClassProbability();
          generateBayesTable();
-         doFullTraining();             
-         printInfo();
+         doFullTraining(); 
+         return this.accuracy;
+         //printInfo();
      }
+     
 }
+     
+     
+     
+
