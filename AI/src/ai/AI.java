@@ -21,17 +21,13 @@ public class AI {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ParseData P = new ParseData("D:/data.txt") ; //NAMA FILENYA SESUAIKAN SAMA LOKASI FILENYA YA
+        ParseData P = new ParseData("src/data.txt") ; //NAMA FILENYA SESUAIKAN SAMA LOKASI FILENYA YA
         P.hitungVariasiAtribut();
         P.hitungVariasiHasil();
         P.generateClassProbability();
         P.generateBayesTable();
         P.printInfo();
-        P.doFullTraining();
-        System.out.println("=== CONTOH ===");
-        String contoh = "vhigh,vhigh,2,4,small,low";
-        String ret[] = contoh.split(",");
-        P.getClassification(ret,ret.length);
+        P.doFullTraining();        
     }
     
 }

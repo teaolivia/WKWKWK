@@ -19,13 +19,14 @@ import java.util.Map;
  * @author tama
  */
 public class ParseData {
-     String name[] ;
+     ArrayList<String> listAttr =new ArrayList<String>();
      String data[][] ;
+     String dataName;
      ArrayList<String> variasiClass=new ArrayList<String>() ; //List yang menyimpan nilai berbeda untuk klasifikasi
-     int variasihasil; //  nilai yang menyimpan nilai perbedaan hasil akhir (klasifikasi)
-     int variasidata[] ; //array yang menyimpan nilai perbedaan data
-     int iname ;//iname = jumlah atribut
-     int rdata; //rdata = jumlah data
+     int variasiKelas; //  nilai yang menyimpan jumlah nilai unik untuk klasifikasi
+     int variasiAttr[] ; //array yang menyimpan jumlah nilai unik untuk tiap attribut
+     int numAttr ;//numAttr = jumlah atribut
+     int totalData; //totalData = jumlah data
      int totalMatch ;
      double accuracy ;
      Map<String,Double> bayesTable = new HashMap<String,Double> ();
@@ -33,13 +34,11 @@ public class ParseData {
      Map<String,Integer> classFrekuensi = new HashMap<String,Integer>();
      
      ParseData() {
-         iname = 5;
-         rdata = 5;
-         name = new String[iname] ;
-         data = new String[rdata][iname];
-         for (int i=0;i<iname;i++) {
-             name[i]="x";
-             for (int j=0;j<rdata;j++) data[j][i]="";
+         numAttr = 5;
+         totalData = 5;
+         data = new String[totalData][numAttr];
+         for (int i=0;i<numAttr;i++) {
+             for (int j=0;j<totalData;j++) data[j][i]="";
          }
      }
      
@@ -49,21 +48,29 @@ public class ParseData {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
-            line = bufferedReader.readLine();      
-            String[] attr = line.split(",");
-            iname = attr.length; //menghitung jumlah attribut
-            name = new String[iname];
-            variasidata = new int[iname];
-            for (int i=0;i<iname;i++) {
-                name[i] = attr[i];
+            do {
+                line = bufferedReader.readLine();  
+            } while (!line.contains("@relation"));
+            //Ketika sudah menemukan yang berawalan @relation, maka pembacaan di lanjutkan 2x
+            String[] aa=line.split(" ");
+            dataName = aa[1];
+            line = bufferedReader.readLine();
+            line = bufferedReader.readLine();
+            while (line.contains("@attribute")) {
+                String[] attr = line.split(" ");
+                listAttr.add(attr[1]);
+                line = bufferedReader.readLine();
             }
+            //Keluar dari proses di atas, pembacaan berada di line kosong
+            line = bufferedReader.readLine(); //pembacaan berada di @data
+            numAttr = listAttr.size(); //jumlah attribut
+            variasiAttr = new int[numAttr];
             int count=0;
             //menghitung jumlah data
             while (bufferedReader.readLine()!=null) count++; //menghitung jumlah data
-            rdata = count;
-            data = new String[rdata][iname];
+            totalData = count;
+            data = new String[totalData][numAttr];
             fileReader.close();
-            System.out.println("Contents of file:");
         } catch (Exception e) {
             e.printStackTrace();
 	}
@@ -73,13 +80,15 @@ public class ParseData {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
-            line = bufferedReader.readLine();
+            do {
+                line = bufferedReader.readLine();            
+            } while (!line.contains("@data"));
             int j=0;
             line=bufferedReader.readLine();
             //memasukkan data
             while (line!=null) {
                 String[] attr = line.split(",");
-                for (int i=0;i<iname;i++) data[j][i]=attr[i];
+                for (int i=0;i<numAttr;i++) data[j][i]=attr[i];
                 line=bufferedReader.readLine();
                 j++;
             }
@@ -94,17 +103,17 @@ public class ParseData {
      }
      
      public void printInfo() {
-         System.out.println("===================================");
-         System.out.println("======== DATA DATA TERKAIT ========");
-         System.out.println("Jumlah atribut : "+iname);
-         for (int i=0;i<iname;i++) System.out.println("  "+(i+1)+". "+name[i]+" | Nilai berbeda (variasi) : "+variasidata[i]);
-         System.out.println("Jumlah data : "+rdata);
-         System.out.println("Variasi hasil akhir (klasifikasi) : "+variasihasil);
-         /*for (int i=0;i<rdata;i++) {
-             for (int j=0;j<iname-1;j++) {
+         System.out.println("=============================================");
+         System.out.println("======== DATA DATA PENTING '"+dataName+"' ========");
+         System.out.println("Jumlah atribut : "+numAttr);
+         for (int i=0;i<numAttr;i++) System.out.println("  "+(i+1)+". "+listAttr.get(i)+" | Nilai berbeda (variasi) : "+variasiAttr[i]);
+         System.out.println("Jumlah data : "+totalData);
+         System.out.println("Variasi hasil akhir (klasifikasi) : "+variasiKelas);
+         /*for (int i=0;i<totalData;i++) {
+             for (int j=0;j<numAttr-1;j++) {
                  System.out.print(data[i][j]+",");
              }
-             System.out.print(data[i][iname-1]+"\n");
+             System.out.print(data[i][numAttr-1]+"\n");
          }*/
           System.out.println("==== Frekuensi tiap Kelas ====");
          System.out.println("Kelas -> Frekuensi");         
@@ -125,54 +134,54 @@ public class ParseData {
      }
      
      public void hitungVariasiHasil() {         
-         for (int i=0;i<rdata;i++) {
-             String temp = data[i][iname-1];
+         for (int i=0;i<totalData;i++) {
+             String temp = data[i][numAttr-1];
              if (!variasiClass.contains(temp)) variasiClass.add(temp);
          }
-         variasihasil = variasiClass.size();
+         variasiKelas = variasiClass.size();
      }
      
      public void hitungVariasiAtribut() {
          
-         for (int j=0;j<iname;j++) {
+         for (int j=0;j<numAttr;j++) {
             ArrayList<String> item = new ArrayList<String>();
-            for (int i=0;i<rdata;i++) {
+            for (int i=0;i<totalData;i++) {
                 String temp = data[i][j];
                 if (!item.contains(temp)) item.add(temp);
             }
-            variasidata[j] = item.size();
+            variasiAttr[j] = item.size();
          }
      }
      
      public void generateClassProbability() {
-         for (int i=0;i<rdata;i++) {
-             String key = data[i][iname-1];
+         for (int i=0;i<totalData;i++) {
+             String key = data[i][numAttr-1];
              if (classProbability.containsKey(key)) {
                  double current = (double) classProbability.get(key);
-                 current+=(double)1/rdata ;
+                 current+=(double)1/totalData ;
                  classProbability.put(key,current);
                  int current2 = classFrekuensi.get(key);
                  classFrekuensi.put(key,current2+1);
              }
              else {
-                 classProbability.put(key,(double)1/rdata);
+                 classProbability.put(key,(double)1/totalData);
                  classFrekuensi.put(key,1);
              }
          }
      }
      
      public void generateBayesTable() {        
-         for (int j=0;j<iname;j++) {
-            for (int i=0;i<rdata;i++) {
-                String key = name[j]+"|"+data[i][j]+"|"+data[i][iname-1];
+         for (int j=0;j<numAttr;j++) {
+            for (int i=0;i<totalData;i++) {
+                String key = listAttr.get(j)+"|"+data[i][j]+"|"+data[i][numAttr-1];
                 if (bayesTable.containsKey(key)) {
                     double current = bayesTable.get(key);
-                    int frekuensiKelas = classFrekuensi.get(data[i][iname-1]);                    
+                    int frekuensiKelas = classFrekuensi.get(data[i][numAttr-1]);                    
                     double addition =(double) 1/frekuensiKelas ;
                     bayesTable.put(key,(double) current+addition);
                 }
                 else {
-                    int frekuensiKelas = classFrekuensi.get(data[i][iname-1]);                    
+                    int frekuensiKelas = classFrekuensi.get(data[i][numAttr-1]);                    
                     double addition =(double) 1/frekuensiKelas ;
                     bayesTable.put(key,addition);
                 }
@@ -185,13 +194,13 @@ public class ParseData {
          
          double max=0,prob_temp;
          String kelas="";
-         for (int i=0;i<variasihasil;i++) {
+         for (int i=0;i<variasiKelas;i++) {
              String nullvalue ="";
              String kelasuji = variasiClass.get(i);
               //System.out.print("P("+kelasuji+")");
               prob_temp = classProbability.get(kelasuji);
               for (int j=0;j<k;j++) {
-                  String aa = name[j]+"|"+s[j]+"|"+kelasuji ;
+                  String aa = listAttr.get(j)+"|"+s[j]+"|"+kelasuji ;
                   double multiplier = 0;
                   if (bayesTable.get(aa)!=null) {
                       multiplier = bayesTable.get(aa);                      
@@ -212,19 +221,19 @@ public class ParseData {
      
      public void doFullTraining() {
          System.out.println("=============== FULL TRAINING CLASSIFICATION DATA ===============");
-         for (int i=0;i<rdata;i++) {
+         for (int i=0;i<totalData;i++) {
              String datauji[] = data[i] ;
-             String hasil =getClassification(datauji,iname-1);
-             System.out.print("Class from data : "+data[i][iname-1]);
-             if (hasil.equals(data[i][iname-1])) {
+             String hasil =getClassification(datauji,numAttr-1);
+             System.out.print("Class from data : "+data[i][numAttr-1]);
+             if (hasil.equals(data[i][numAttr-1])) {
                  totalMatch++;
                  System.out.println(" ===> MATCH !!");
              }
              else System.out.println(" ===> NOT MATCH !!");
          }
          System.out.println("=> Jumlah data yang match : "+totalMatch);
-         System.out.println("=> Jumlah yang data tidak match : "+(rdata-totalMatch));
-         accuracy = ((double) totalMatch/rdata)*100 ;
+         System.out.println("=> Jumlah yang data tidak match : "+(totalData-totalMatch));
+         accuracy = ((double) totalMatch/totalData)*100 ;
          System.out.println("=> Akurasi : "+accuracy);
          System.out.println("=====================================================================");
      }
