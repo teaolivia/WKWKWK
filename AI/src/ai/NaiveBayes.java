@@ -18,22 +18,24 @@ import java.util.Map;
  *
  * @author tama
  */
-public class ParseData {
+public class NaiveBayes {
      ArrayList<String> listAttr =new ArrayList<String>();
      String data[][] ;
+     String dataTest[][];
      String dataName;
      ArrayList<String> variasiClass=new ArrayList<String>() ; //List yang menyimpan nilai berbeda untuk klasifikasi
      int variasiKelas; //  nilai yang menyimpan jumlah nilai unik untuk klasifikasi
      int variasiAttr[] ; //array yang menyimpan jumlah nilai unik untuk tiap attribut
      int numAttr ;//numAttr = jumlah atribut
      int totalData; //totalData = jumlah data
+     int totalDataUji;
      int totalMatch ;
      double accuracy ;
      Map<String,Double> bayesTable = new HashMap<String,Double> ();
      Map<String,Double> classProbability = new HashMap<String,Double> ();
      Map<String,Integer> classFrekuensi = new HashMap<String,Integer>();
      
-     ParseData() {
+     NaiveBayes() {
          numAttr = 5;
          totalData = 5;
          data = new String[totalData][numAttr];
@@ -42,65 +44,15 @@ public class ParseData {
          }
      }
      
-     ParseData(String files) {
-        try {
-            File file = new File(files);
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            do {
-                line = bufferedReader.readLine();  
-            } while (!line.contains("@relation"));
-            //Ketika sudah menemukan yang berawalan @relation, maka pembacaan di lanjutkan 2x
-            String[] aa=line.split(" ");
-            dataName = aa[1];
-            line = bufferedReader.readLine();
-            line = bufferedReader.readLine();
-            while (line.contains("@attribute")) {
-                String[] attr = line.split(" ");
-                listAttr.add(attr[1]);
-                line = bufferedReader.readLine();
-            }
-            //Keluar dari proses di atas, pembacaan berada di line kosong
-            line = bufferedReader.readLine(); //pembacaan berada di @data
-            numAttr = listAttr.size(); //jumlah attribut
-            variasiAttr = new int[numAttr];
-            int count=0;
-            //menghitung jumlah data
-            while (bufferedReader.readLine()!=null) count++; //menghitung jumlah data
-            totalData = count;
-            data = new String[totalData][numAttr];
-            fileReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-	}
-        
-        try {
-            File file = new File(files);
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            do {
-                line = bufferedReader.readLine();            
-            } while (!line.contains("@data"));
-            int j=0;
-            line=bufferedReader.readLine();
-            //memasukkan data
-            while (line!=null) {
-                String[] attr = line.split(",");
-                for (int i=0;i<numAttr;i++) data[j][i]=attr[i];
-                line=bufferedReader.readLine();
-                j++;
-            }
-            
-            fileReader.close();
-            System.out.println("Contents of file:");
-        } catch (Exception e) {
-            e.printStackTrace();
-	}
-        
-        
+     NaiveBayes(ArrayList<String> listAttr_,String dataName) {
+         for (int i=0;i<listAttr_.size();i++) {
+             this.listAttr.add(listAttr_.get(i));
+         }
+         this.numAttr = listAttr_.size();
+         this.dataName = dataName;
+         this.variasiAttr = new int[numAttr];
      }
+     
      
      public void printInfo() {
          System.out.println("=============================================");
@@ -219,13 +171,13 @@ public class ParseData {
          return kelas;
      }
      
-     public void doFullTraining() {
+     public double doFullTraining() {
          System.out.println("=============== FULL TRAINING CLASSIFICATION DATA ===============");
          for (int i=0;i<totalData;i++) {
-             String datauji[] = data[i] ;
+             String datauji[] = dataTest[i] ;
              String hasil =getClassification(datauji,numAttr-1);
-             System.out.print("Class from data : "+data[i][numAttr-1]);
-             if (hasil.equals(data[i][numAttr-1])) {
+             System.out.print("Class from data : "+dataTest[i][numAttr-1]);
+             if (hasil.equals(dataTest[i][numAttr-1])) {
                  totalMatch++;
                  System.out.println(" ===> MATCH !!");
              }
@@ -236,5 +188,24 @@ public class ParseData {
          accuracy = ((double) totalMatch/totalData)*100 ;
          System.out.println("=> Akurasi : "+accuracy);
          System.out.println("=====================================================================");
+         return this.accuracy;
+     }
+     
+     
+     public void doClassification(String[][] dataTraining,int totalDTrain,String[][] dataUji,int totalDUji) {
+         this.data = dataTraining ;
+         this.totalData = totalDTrain ;
+         this.dataTest = dataUji;
+         this.totalDataUji = totalDUji ;
+         Map<String,Double> bayesTable = new HashMap<String,Double> ();
+         Map<String,Double> classProbability = new HashMap<String,Double> ();
+         Map<String,Integer> classFrekuensi = new HashMap<String,Integer>();
+         ArrayList<String> variasiClass=new ArrayList<String>() ; //List yang menyimpan nilai berbeda untuk klasifikasi
+         hitungVariasiAtribut();
+         hitungVariasiHasil();
+         generateClassProbability();
+         generateBayesTable();
+         doFullTraining();             
+         printInfo();
      }
 }
