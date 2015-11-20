@@ -44,12 +44,12 @@ public class NaiveBayes {
          }
      }
      
-     NaiveBayes(ArrayList<String> listAttr_,String dataName) {
-         for (int i=0;i<listAttr_.size();i++) {
-             this.listAttr.add(listAttr_.get(i));
+     NaiveBayes(Data D) {
+         for (int i=0;i<D.listAttr.size();i++) {
+             this.listAttr.add(D.listAttr.get(i));
          }
-         this.numAttr = listAttr_.size();
-         this.dataName = dataName;
+         this.numAttr = D.listAttr.size();
+         this.dataName = D.dataName;
          this.variasiAttr = new int[numAttr];
      }
      
@@ -173,7 +173,8 @@ public class NaiveBayes {
      
      public double doFullTraining() {
          System.out.println("=============== FULL TRAINING CLASSIFICATION DATA ===============");
-         for (int i=0;i<totalData;i++) {
+         totalMatch=0;
+         for (int i=0;i<totalDataUji;i++) {
              String datauji[] = dataTest[i] ;
              String hasil =getClassification(datauji,numAttr-1);
              System.out.print("Class from data : "+dataTest[i][numAttr-1]);
@@ -184,8 +185,8 @@ public class NaiveBayes {
              else System.out.println(" ===> NOT MATCH !!");
          }
          System.out.println("=> Jumlah data yang match : "+totalMatch);
-         System.out.println("=> Jumlah yang data tidak match : "+(totalData-totalMatch));
-         accuracy = ((double) totalMatch/totalData)*100 ;
+         System.out.println("=> Jumlah yang data tidak match : "+(totalDataUji-totalMatch));
+         accuracy = ((double) totalMatch/totalDataUji)*100 ;
          System.out.println("=> Akurasi : "+accuracy);
          System.out.println("=====================================================================");
          return this.accuracy;
@@ -210,6 +211,45 @@ public class NaiveBayes {
          //printInfo();
      }
      
+     
+     public double do10crossFold(Data D) {
+         double accuracy[];
+         accuracy = new double[11];
+         accuracy[1] = doClassification(D.generateDataTraining(1),D.totalDataTraining[1],D.dataSet1,D.totalDataperSet[1]);
+         System.out.println("==============================================");
+         accuracy[2] = doClassification(D.generateDataTraining(2),D.totalDataTraining[2],D.dataSet2,D.totalDataperSet[2]);
+         System.out.println("==============================================");
+         accuracy[3] = doClassification(D.generateDataTraining(3),D.totalDataTraining[3],D.dataSet3,D.totalDataperSet[3]);
+         System.out.println("==============================================");
+         accuracy[4] = doClassification(D.generateDataTraining(4),D.totalDataTraining[4],D.dataSet4,D.totalDataperSet[4]);
+         System.out.println("==============================================");
+         accuracy[5] = doClassification(D.generateDataTraining(5),D.totalDataTraining[5],D.dataSet5,D.totalDataperSet[5]);
+         System.out.println("==============================================");
+         accuracy[6] = doClassification(D.generateDataTraining(6),D.totalDataTraining[6],D.dataSet6,D.totalDataperSet[6]);
+         System.out.println("==============================================");
+         accuracy[7] = doClassification(D.generateDataTraining(7),D.totalDataTraining[7],D.dataSet7,D.totalDataperSet[7]);
+         System.out.println("==============================================");
+         accuracy[8] = doClassification(D.generateDataTraining(8),D.totalDataTraining[8],D.dataSet8,D.totalDataperSet[8]);
+         System.out.println("==============================================");
+         accuracy[9] = doClassification(D.generateDataTraining(9),D.totalDataTraining[9],D.dataSet9,D.totalDataperSet[9]);
+         System.out.println("==============================================");
+         accuracy[10] = doClassification(D.generateDataTraining(10),D.totalDataTraining[10],D.dataSet10,D.totalDataperSet[10]);
+         
+         double sum=0, acc ;
+         for (int i=1;i<=10;i++) {
+             System.out.println("Accuracy uji ke -"+i+" : "+accuracy[i]);
+             sum+=accuracy[i];
+         }
+         acc = (double)sum/10;
+         System.out.println("Accuracy rata rata : "+acc);
+         return acc;
+     }
+     
+     public double doSchemaFullTraining(Data D) {
+         double ret ;
+         ret = doClassification(D.data,D.totalData,D.data,D.totalData);
+         return ret ;
+     }
 }
      
      

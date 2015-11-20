@@ -21,20 +21,17 @@ public class AI {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-      /*  ParseData P = new ParseData("src/data.txt") ; //NAMA FILENYA SESUAIKAN SAMA LOKASI FILENYA YA
-        P.hitungVariasiAtribut();
-        P.hitungVariasiHasil();
-        P.generateClassProbability();
-        P.generateBayesTable();
-        P.printInfo();
-        P.doFullTraining();*/
-        
+    
         Data D = new Data("src/data.txt");
         D.makeDataSet();
-        D.printInfo();
-        NaiveBayes NB = new NaiveBayes(D.listAttr,D.dataName) ;
-        NB.doClassification(D.data,D.totalData,D.data,D.totalData);
+        //D.printInfo();
+        NaiveBayes NB = new NaiveBayes(D) ;
+        NB.doSchemaFullTraining(D);
         
+        NB.printInfo();
+        //KNN K = new KNN(2,D);
+        //K.doSchemaFullTraining(D);
+        //NB.do10crossFold(D);
     }
     
 }

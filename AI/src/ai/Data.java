@@ -27,6 +27,7 @@ public class Data {
     String[][] dataSet9 ;
     String[][] dataSet10 ;
     int[] totalDataperSet ; 
+    int[] totalDataTraining; 
     int numAttr ;//numAttr = jumlah atribut
     int totalData; //totalData = jumlah data
     int numDataSetNormal ;
@@ -38,6 +39,7 @@ public class Data {
      
      Data(String files) {
          totalDataperSet = new int[11];
+         totalDataTraining = new int[11];
          try {
             File file = new File(files);
             FileReader fileReader = new FileReader(file);
@@ -198,7 +200,8 @@ public class Data {
          
          if (i==10) ret = new String[numDataSetNormal*9][numAttr] ;
          else ret = new String[(numDataSetNormal*8)+numDataSetOver][numAttr];
-         
+         for (int q=1;q<10;q++)totalDataTraining[q] = (numDataSetNormal*8)+numDataSetOver;
+         totalDataTraining[10] = numDataSetNormal*9;
          if (i==10) {
              int start = 0;
              int end = numDataSetNormal*8 ;
