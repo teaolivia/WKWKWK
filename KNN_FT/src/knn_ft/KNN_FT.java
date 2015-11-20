@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package knn_ft;
-
+java.lang;
 /**
  *
  * @author moel
@@ -18,14 +18,7 @@ public class KNN_FT {
         // TODO code application logic here
         parse K= new parse("D:/data.txt") ; //NAMA FILENYA SESUAIKAN SAMA LOKASI FILENYA YA
         K.printInfo();
-        
-        System.out.println("Masukan nilai K");
-        int nk=5;
-        K.doFullTraining(nk);
-        System.out.println("=== CONTOH ===");
-        String contoh = "vhigh,vhigh,2,4,small,low";
-        String ret[] = contoh.split(",");
-        K.getClassification(ret,ret.length);
+        K.doFullTraining();
     }
     
 }

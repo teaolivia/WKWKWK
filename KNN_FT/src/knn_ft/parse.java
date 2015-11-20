@@ -6,12 +6,18 @@
 package knn_ft;
 
 import java.io.BufferedReader;
+import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  *
@@ -56,11 +62,14 @@ public class parse {
            for (int i=0;i<iname;i++) {
                name[i] = attr[i];
            }
+           
            int count=0;
            //menghitung jumlah data
            while (bufferedReader.readLine()!=null) count++; //menghitung jumlah data
            rdata = count;
            data = new String[rdata][iname];
+           
+           
            fileReader.close();
            System.out.println("Contents of file:");
         } catch (Exception e) {
@@ -100,16 +109,122 @@ public class parse {
         
         System.out.println("Jumlah data : "+rdata);
         
+        // To show dataset
+        /*
+        for (int i=1;i<rdata;i++){
+            for(int j=0;j<iname;j++){
+                System.out.print(data[i][j]);
+                System.out.print(" ");
+            }
+            System.out.println("");
+        }
+        */
         System.out.println("===================================\n"); 
         
     }
     
-    public string getClassificaion (String s[], int k){
-        // implements later   
+    public String check (String s[], String p[]){
+        int dif;
+        dif = iname;
+        
+        for(int i=0;i<iname;i++){
+            
+            if(s[i].equals(p[i])) dif--;
+            //System.out.println(s[i] + " " + p[i] + " " + dif);
+        }
+        
+        String res = Integer.toString(dif);
+        return res;
+        
     }
     
-    public void doFullTraining(int k){
-        //implements later
+    public String doKNN (int cur, int k){
+        //inisialisasi temp dataset;
+        
+        String temp[][];
+        temp = new String[rdata][iname+1];
+        String atr[];
+        atr =  new String[iname+1];
+
+        for (int i=0;i<iname;i++){
+            atr[i] = name[i];
+        }
+
+        atr[iname] = "Jarak";
+
+        for(int i=0;i<rdata;i++){
+            for (int j=0;j<iname;j++){
+                
+                temp[i][j] = data[i][j];
+            }
+        }
+
+        //test KNN for every dataset
+        for (int i=0;i<rdata;i++){
+            
+            temp[i][iname] = check(data[cur],temp[i]);
+        }
+        
+        Arrays.sort(temp, new Comparator<String[]>() {
+            @Override
+            public int compare(final String[] entry1, final String[] entry2) {
+                final String j1 = entry1[iname];
+                final String j2 = entry2[iname];
+                return j1.compareTo(j2);
+            }
+        });
+        
+        // Get the clasification
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        String tempStr;
+        for (int i = 0; i < k; i++)
+        {
+            tempStr = temp[i][iname-1];
+            if(map.containsKey(tempStr))
+            {
+                map.put(tempStr, map.get(tempStr) + 1);
+            }
+            else
+            {
+                map.put(tempStr,1);
+            }
+        }
+        Map.Entry<String,Integer> entry=map.entrySet().iterator().next();
+        String res= entry.getKey();
+        //System.out.println("Res: " + res);
+        
+        return res;
+    }
+    
+    public void doFullTraining(){
+        System.out.println("Masukan nilai k");
+        
+        try{
+            BufferedReader cin = new BufferedReader(new InputStreamReader(System.in));
+            String se = cin.readLine();
+            int k = Integer.parseInt(se);
+            int same=0;
+            double acc;
+            String match[];
+            match = new String[rdata];
+            
+            for(int i=0;i<rdata;i++){
+                match[i] = doKNN(i,k);
+                if (data[i][iname-1].equals(match[i])) same++;
+            }
+            
+            
+            acc = ((double)same / rdata)*100;
+            
+            System.out.println("Accuracy: "+ String.format( "%.2f", acc) + "%");
+            
+            
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        
     }
     
     
