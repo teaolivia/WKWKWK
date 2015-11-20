@@ -25,13 +25,14 @@ public class AI {
         Data D = new Data("src/data.txt");
         D.makeDataSet();
         //D.printInfo();
-        NaiveBayes NB = new NaiveBayes(D) ;
-        NB.doSchemaFullTraining(D);
+        //NaiveBayes NB = new NaiveBayes(D) ;
+        //NB.doSchemaFullTraining(D);
         
-        NB.printInfo();
-        //KNN K = new KNN(2,D);
+        //NB.printInfo();
+        KNN K = new KNN(2,D);
         //K.doSchemaFullTraining(D);
-        //NB.do10crossFold(D);
+        K.do10crossFold(D);
+//NB.do10crossFold(D);
     }
     
 }
