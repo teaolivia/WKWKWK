@@ -133,22 +133,22 @@ public class KNN {
          System.out.println("==============================================");
          accuracy[5] = doClassification(D.generateDataTraining(5),D.totalDataTraining[5],D.dataSet5,D.totalDataperSet[5]);
          System.out.println("==============================================");
-         accuracy[6] = doClassification(D.generateDataTraining(6),D.totalDataTraining[6],D.dataSet6,D.totalDataperSet[6]);
+         accuracy[6] = doClassification(D.generateDataTraining(5),D.totalDataTraining[5],D.dataSet5,D.totalDataperSet[5]);
          System.out.println("==============================================");
-         accuracy[7] = doClassification(D.generateDataTraining(7),D.totalDataTraining[7],D.dataSet7,D.totalDataperSet[7]);
+         accuracy[7] = doClassification(D.generateDataTraining(6),D.totalDataTraining[6],D.dataSet6,D.totalDataperSet[6]);
          System.out.println("==============================================");
-         accuracy[8] = doClassification(D.generateDataTraining(8),D.totalDataTraining[8],D.dataSet8,D.totalDataperSet[8]);
+         accuracy[8] = doClassification(D.generateDataTraining(7),D.totalDataTraining[7],D.dataSet7,D.totalDataperSet[7]);
          System.out.println("==============================================");
-         accuracy[9] = doClassification(D.generateDataTraining(9),D.totalDataTraining[9],D.dataSet9,D.totalDataperSet[9]);
+         accuracy[9] = doClassification(D.generateDataTraining(8),D.totalDataTraining[8],D.dataSet8,D.totalDataperSet[8]);
          System.out.println("==============================================");
-         accuracy[10] = doClassification(D.generateDataTraining(10),D.totalDataTraining[10],D.dataSet10,D.totalDataperSet[10]);
+         accuracy[10] = doClassification(D.generateDataTraining(9),D.totalDataTraining[9],D.dataSet9,D.totalDataperSet[9]);
          
          double sum=0, acc ;
          for (int i=1;i<=10;i++) {
              System.out.println("Accuracy uji ke -"+i+" : "+accuracy[i]);
              sum+=accuracy[i];
          }
-         acc = (double)sum/10;
+         acc = (double)sum/9;
          System.out.println("Accuracy rata rata : "+acc);
          return acc;
      }
