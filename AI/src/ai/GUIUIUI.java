@@ -4,7 +4,7 @@ package ai;
 import ai.Data;
 import java.io.File;
 import javax.swing.JFileChooser;
-import ai.KNN;
+import ai.kNN;
 import ai.NaiveBayes;
 import javax.management.Notification;
 
@@ -160,9 +160,9 @@ public class GUIUIUI extends javax.swing.JFrame {
                     int k = Integer.parseInt(jTextField1.getText());
                     Data D = new Data(jLabel1.getText());
                     D.makeDataSet();
-                    KNN kNN = new KNN(2,D);
-                    kNN.doSchemaFullTraining(D);
-                    jLabel2.setText("Accuracy : "+kNN.doFullTraining()+" %");
+                    kNN kNNz = new kNN(2,D);
+                    kNNz.doSchemaFullTraining(D);
+                    jLabel2.setText("Accuracy : "+kNNz.doFullTraining()+" %");
                 }catch(Exception e){
                     jLabel2.setText(s+" is not a number");
                 }
@@ -181,9 +181,9 @@ public class GUIUIUI extends javax.swing.JFrame {
                     int k = Integer.parseInt(jTextField1.getText());
                     Data D = new Data(jLabel1.getText());
                     D.makeDataSet();
-                    KNN kNN = new KNN(2,D);
-                    kNN.doSchemaFullTraining(D);
-                    jLabel2.setText("Accuracy : "+kNN.do10crossFold(D)+" %");
+                    kNN kNNzz = new kNN(2,D);
+                    kNNzz.doSchemaFullTraining(D);
+                    jLabel2.setText("Accuracy : "+kNNzz.do10crossFold(D)+" %");
                 }catch(Exception e){
                     jLabel2.setText(s+" is not a number");
                 }

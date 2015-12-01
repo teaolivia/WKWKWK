@@ -99,13 +99,13 @@ public class parse {
 	}
     }
     
-    public printInfo(){
+    public void printInfo(){
         System.out.println("===================================");
         System.out.println("======== DATA DATA TERKAIT ========");
         System.out.println("Jumlah atribut : "+iname);
         
         for (int i=0;i<iname;i++)
-            System.out.println("  "+(i+1)+". "+name[i]");
+            System.out.println("  "+(i+1)+". +name[i]");
         
         System.out.println("Jumlah data : "+rdata);
         

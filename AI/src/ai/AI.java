@@ -29,7 +29,7 @@ public class AI {
         //NB.doSchemaFullTraining(D);
         
         //NB.printInfo();
-        KNN K = new KNN(2,D);
+        kNN K = new kNN(2,D);
         //K.doSchemaFullTraining(D);
         K.do10crossFold(D);
 //NB.do10crossFold(D);

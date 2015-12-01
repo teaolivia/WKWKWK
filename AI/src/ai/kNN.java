@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class KNN {
+public class kNN {
     String[] kelasTemp;
     int[] differTemp ;
     String[][] data ;
@@ -19,9 +19,9 @@ public class KNN {
     Data D ;
     double accuracy ;
     Map<String,Integer> sortKNN ;
-    KNN() {}
+    kNN() {}
     
-    KNN(int numKNN_,Data D_) {
+    kNN(int numKNN_,Data D_) {
         this.numKNN = numKNN_ ;
         this.D = D_ ;
         this.numAttr = D_.numAttr;
