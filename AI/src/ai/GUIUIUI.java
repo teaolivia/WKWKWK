@@ -194,19 +194,22 @@ public class GUIUIUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        Data D = new Data(jLabel1.getText());
-        D.makeDataSet();
-        NaiveBayes NB = new NaiveBayes(D) ;
-        jLabel2.setText("Accuracy : "+NB.doFullTraining()+" %");
+        if(!jLabel1.getText().equalsIgnoreCase("")){
+            Data D = new Data(jLabel1.getText());
+            D.makeDataSet();
+            NaiveBayes NB = new NaiveBayes(D) ;
+            jLabel2.setText("Accuracy : "+NB.doFullTraining()+" %");
+       }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        Data D = new Data(jLabel1.getText());
-        D.makeDataSet();
-        NaiveBayes NB = new NaiveBayes(D) ;
-        jLabel2.setText("Accuracy : "+NB.do10crossFold(D)+" %");
-
+        if(!jLabel1.getText().equalsIgnoreCase("")){
+            Data D = new Data(jLabel1.getText());
+            D.makeDataSet();
+            NaiveBayes NB = new NaiveBayes(D) ;
+            jLabel2.setText("Accuracy : "+NB.do10crossFold(D)+" %");
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
