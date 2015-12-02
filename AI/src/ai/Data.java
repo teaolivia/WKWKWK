@@ -196,7 +196,7 @@ public class Data {
      }
      
      public String[][] generateDataTraining(int i) {
-         String ret[][]=new String[5][5];
+         String ret[][] = new String[5][5];
          
          if (i==10) ret = new String[numDataSetNormal*9][numAttr] ;
          else ret = new String[(numDataSetNormal*8)+numDataSetOver][numAttr];
